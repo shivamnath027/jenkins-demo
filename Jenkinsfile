@@ -5,20 +5,43 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                echo 'Checking out source code'
                 checkout scm
             }
         }
 
-        stage('Verify Python') {
+        stage('Python Pipeline') {
             steps {
-                sh 'python3 --version'
+                sh '''
+                echo "Running Python pipeline"
+                python3 app.py
+                '''
             }
         }
 
-        stage('Run Python App') {
+        stage('.NET Restore') {
             steps {
-                sh 'python3 app.py'
+                sh '''
+                cd JenkinsDotNetDemo
+                dotnet restore
+                '''
+            }
+        }
+
+        stage('.NET Build') {
+            steps {
+                sh '''
+                cd JenkinsDotNetDemo
+                dotnet build --configuration Release
+                '''
+            }
+        }
+
+        stage('.NET Run') {
+            steps {
+                sh '''
+                cd JenkinsDotNetDemo
+                dotnet run
+                '''
             }
         }
     }
