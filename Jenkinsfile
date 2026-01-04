@@ -2,17 +2,23 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
-                echo 'Code checked out from Git'
-                sh 'ls -l'
+                echo 'Checking out source code'
+                checkout scm
             }
         }
 
-        stage('Hello') {
+        stage('Verify Python') {
             steps {
-                sh 'echo "Hello Shivam, Pipeline is running from Jenkinsfile"'
-                sh 'cat hello.txt'
+                sh 'python3 --version'
+            }
+        }
+
+        stage('Run Python App') {
+            steps {
+                sh 'python3 app.py'
             }
         }
     }
